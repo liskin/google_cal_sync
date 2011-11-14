@@ -50,7 +50,7 @@ sub parse {
 sub dt {
     my %param;
     @param{qw/day month year hour minute/} = @_;
-    return DateTime->new( %param );
+    return DateTime->new( %param, time_zone => 'Europe/Prague' );
 }
 
 1;
