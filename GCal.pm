@@ -70,7 +70,9 @@ sub update_entries {
     my $self = shift;
     my $entries;
 
-    for my $entry ( $self->{cal}->get_events ) {
+    for my $entry ( $self->{cal}->get_events(
+            fields => 'entry(gd:extendedProperty,link)' ) )
+    {
         my $id = $entry->extended_property->{id};
         if ( not $id ) {
             warn "entry without id";
