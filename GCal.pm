@@ -44,6 +44,7 @@ sub set_calendar {
 # , when     => [ <DateTime> of start, <DateTime> of end ]
 # , id       => 'unique event id'
 # , public   => 1 (if you want people to be able to add themselves)
+# , icon     => 'icon url' (or undef)
 # }
 sub x2entry {
     my ($ev, $entry) = @_;
@@ -62,6 +63,21 @@ sub x2entry {
     $entry->extended_property( 'last_hash', $hash     );
     $entry->set( $entry->{_gcal_ns}, 'anyoneCanAddSelf' => '',
         { 'value' => $ev->{public} ? 'true' : 'false' } );
+
+    my $webContent = 'http://schemas.google.com/gCal/2005/webContent';
+    $entry->link( grep { $_->rel ne $webContent } $entry->link );
+
+    if ( $ev->{icon} ) {
+        my $link = XML::Atom::Link->new;
+        $link->type( 'image/gif' );
+        $link->rel( 'http://schemas.google.com/gCal/2005/webContent' );
+        $link->href( $ev->{icon} );
+        $link->XML::Atom::Base::set( $entry->{_gcal_ns}, 'webContent' => '',
+            { 'display' => 'CHIP' } );
+        $link->title( '' );
+        $link->set_attr( 'xmlns', '' ); # stupid hack
+        $entry->add_link( $link );
+    }
 
     return $changed;
 }

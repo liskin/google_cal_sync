@@ -37,6 +37,7 @@ sub parse {
                         , when     => [ $start, $end ]
                         , id       => sha1_hex( "$3 $start" )
                         , public   => 1
+                        , icon     => 'http://openiconlibrary.sourceforge.net/gallery2/open_icon_library-full/icons/png/16x16/categories/applications-multimedia-4.png'
                         };
             next if $event->{title} =~ /kino nehraje/;
             push @events, $event;
