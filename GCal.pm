@@ -41,6 +41,7 @@ sub set_calendar {
 # , url      => 'event url'
 # , when     => [ <DateTime> of start, <DateTime> of end ]
 # , id       => 'unique event id'
+# , public   => 1 (if you want people to be able to add themselves)
 # }
 sub x2entry {
     my ($ev, $entry) = @_;
@@ -49,7 +50,7 @@ sub x2entry {
     my $changed =
         $entry->extended_property->{last_hash}
         ? $hash ne $entry->extended_property->{last_hash}
-        : 0;
+        : 1;
 
     $entry->title(    $ev->{title}    );
     $entry->content(  $ev->{url} . "\n\n" . $ev->{content}  );
@@ -57,6 +58,8 @@ sub x2entry {
     $entry->when(  @{ $ev->{when} }   );
     $entry->extended_property( 'id',        $ev->{id} );
     $entry->extended_property( 'last_hash', $hash     );
+    $entry->set( $entry->{_gcal_ns}, 'anyoneCanAddSelf' => '',
+        { 'value' => $ev->{public} ? 'true' : 'false' } );
 
     return $changed;
 }
