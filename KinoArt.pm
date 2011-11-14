@@ -9,7 +9,6 @@ use utf8;
 use LWP::UserAgent;
 use DateTime;
 use Digest::SHA1 'sha1_hex';
-use Encode;
 
 
 sub download {

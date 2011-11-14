@@ -7,6 +7,14 @@ use warnings;
 
 use Net::Google::Calendar;
 use Data::Dumper;
+use DateTime;
+use JSON::XS;
+use Digest::SHA1 'sha1_hex';
+use Encode;
+
+*DateTime::TO_JSON = sub { return "" . shift };
+
+our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 );
 
 # Constructor, to be called as:
 # my $gcal = GCal->new( user => '...', pass => '... );
@@ -37,18 +45,24 @@ sub set_calendar {
 sub x2entry {
     my ($ev, $entry) = @_;
 
+    my $hash = sha1_hex( encode( 'UTF-8', $json->encode( $ev ) ) );
+    my $changed =
+        $entry->extended_property->{last_hash}
+        ? $hash ne $entry->extended_property->{last_hash}
+        : 0;
+
     $entry->title(    $ev->{title}    );
     $entry->content(  $ev->{url} . "\n\n" . $ev->{content}  );
     $entry->location( $ev->{location} );
     $entry->when(  @{ $ev->{when} }   );
-    $entry->extended_property( 'id',      $ev->{id}      );
+    $entry->extended_property( 'id',        $ev->{id} );
+    $entry->extended_property( 'last_hash', $hash     );
 
-    return;
+    return $changed;
 }
 
 # Take a list of entries in the format expected by x2entry and put them online.
-# New events are added, old are updated (unconditionally, some local
-# hashing/caching should be implemented, TODO), those not present are deleted.
+# New events are added, old are updated if changed, disappeared are deleted.
 sub update_entries {
     my $self = shift;
     my $entries;
@@ -71,15 +85,19 @@ sub update_entries {
             $new   = 1;
         }
 
-        x2entry( $ev, $entry );
+        my $changed = x2entry( $ev, $entry );
 
         if ( $new ) {
             $self->{cal}->add_entry( $entry );
             print "adding " . $entry->extended_property->{id} . "\n";
         } else {
-            $self->{cal}->update_entry( $entry );
+            if ( $changed ) {
+                $self->{cal}->update_entry( $entry );
+                print "updating " . $entry->extended_property->{id} . "\n";
+            } else {
+                print "no change " . $entry->extended_property->{id} . "\n";
+            }
             delete $entries->{ $ev->{id} };
-            print "updating " . $entry->extended_property->{id} . "\n";
         }
     }
 
