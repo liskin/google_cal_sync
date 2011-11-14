@@ -21,7 +21,9 @@ our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 );
 sub new {
     my ($class, %param) = @_;
     my $self = { cal => Net::Google::Calendar->new, %param };
+    $self->{cal}->ssl( 1 );
     $self->{cal}->login( $self->{user}, $self->{pass} ) or die;
+    $self->{calendars} = [ $self->{cal}->get_calendars( 1 ) ];
     bless $self, $class;
     return $self;
 }
@@ -30,8 +32,8 @@ sub new {
 # $cal->set_calendar( 'Facebook events' )
 sub set_calendar {
     my ($self, $cal) = @_;
-    $self->{cal}->set_calendar( grep { $_->title eq $cal }
-        $self->{cal}->get_calendars( 1 ) ) or die;
+    $self->{cal}->set_calendar(
+        grep { $_->title eq $cal } @{ $self->{calendars} } ) or die;
 }
 
 # Fill in Net::Google::Calendar::Entry from a simple hash:

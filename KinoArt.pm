@@ -30,7 +30,7 @@ sub parse {
             last if @dates and pos $page > $dates[0]->[0];
             my $start = dt( @$date[1..3], $1, $2 );
             my $end   = $start + DateTime::Duration->new( hours => 2 );
-            my $event = { title    => $4
+            my $event = { title    => $4 . " (kino Art)"
                         , content  => ''
                         , location => 'Kino Art, Cihlářská 19'
                         , url      => $3
