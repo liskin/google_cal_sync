@@ -7,7 +7,6 @@ use warnings;
 use LWP::UserAgent;
 use ICal;
 use GCal;
-use KinoArt;
 
 my $conf = eval `cat private.conf`;
 
@@ -19,5 +18,10 @@ $gcal->update_entries(
     map { $_->{icon} = 'http://facebook.com/favicon.ico'; $_ }
         ICal::load_ical( $ua->get( $conf->{fb_url} )->decoded_content ) );
 
+use KinoArt;
 $gcal->set_calendar( 'Kino Art' );
 $gcal->update_entries( KinoArt::download );
+
+use Alterna;
+$gcal->set_calendar( 'Alterna' );
+$gcal->update_entries( Alterna::download );

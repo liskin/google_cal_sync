@@ -31,7 +31,7 @@ sub parse {
             my $end   = $start + DateTime::Duration->new( hours => 2 );
             my $event = { title    => $4 . " (kino Art)"
                         , content  => ''
-                        , location => 'Kino Art, Cihlářská 19'
+                        , location => 'Kino Art, Cihlářská 19, Brno'
                         , url      => $3
                         , when     => [ $start, $end ]
                         , id       => sha1_hex( "$3 $start" )
