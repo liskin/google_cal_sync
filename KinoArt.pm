@@ -7,9 +7,8 @@ use warnings;
 use utf8;
 
 use LWP::UserAgent;
-use DateTime;
 use Digest::SHA1 'sha1_hex';
-
+use DT;
 
 sub download {
     my $ua = LWP::UserAgent->new;
@@ -45,12 +44,6 @@ sub parse {
     }
 
     return @events;
-}
-
-sub dt {
-    my %param;
-    @param{qw/day month year hour minute/} = @_;
-    return DateTime->new( %param, time_zone => 'Europe/Prague' );
 }
 
 1;
