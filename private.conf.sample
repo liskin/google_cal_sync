@@ -1,5 +1,5 @@
-{ user => '...'
-, pass => '...'
-, fb_url => '...'
-, foursq_url => '...'
+{ user => '...' # Google username
+, pass => '...' # Google password
+, fb_url => '...' # ical link to Exported events from Facebook
+, foursq_url => '...' # ICS from https://foursquare.com/feeds/
 }
