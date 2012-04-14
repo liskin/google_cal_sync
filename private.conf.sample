@@ -1,4 +1,5 @@
 { user => '...'
 , pass => '...'
 , fb_url => '...'
+, foursq_url => '...'
 }

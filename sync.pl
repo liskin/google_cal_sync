@@ -22,6 +22,13 @@ my $do = {
                 ICal::load_ical( $ua->get( $conf->{fb_url} )->decoded_content ) );
     },
 
+    foursquare => sub {
+        $gcal->set_calendar( 'Foursquare' );
+        $gcal->update_entries(
+            map { $_->{icon} = 'https://foursquare.com/favicon.ico'; $_ }
+                ICal::load_ical( $ua->get( $conf->{foursq_url} )->decoded_content ) );
+    },
+
     kinoart => sub {
         use KinoArt;
         $gcal->set_calendar( 'Kino Art' );
