@@ -15,8 +15,9 @@ my $syncinterval = $conf->{syncinterval} // 1; # day
 my $enabledwifis = $conf->{enabledwifis};
 
 if ( defined $enabledwifis ) {
+    my $eth = `/sbin/ip -o ro g 8.8.8.8`; chomp $eth;
     my $wifi = `/sbin/iw dev wlan1 link | awk '/SSID:/ { print \$2 }'`; chomp $wifi;
-    unless ( grep $wifi eq $_, @$enabledwifis ) {
+    unless ( $eth or grep $wifi eq $_, @$enabledwifis ) {
         say 'Skipping sync, not enabled wifi.';
         exit;
     }
