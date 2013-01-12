@@ -11,7 +11,7 @@ use iCal::Parser;
 # expected by my GCal module.
 sub load_ical {
     my $data = shift;
-    my $parser = iCal::Parser->new;
+    my $parser = iCal::Parser->new( start => '20100101', end => '20200101' );
     my $hash = $parser->parse_strings( $data );
     return uniq( map { ical2x( $_ ) }
                  map { values %$_ } map { values %$_ }
