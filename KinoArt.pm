@@ -7,7 +7,7 @@ use warnings;
 use utf8;
 
 use LWP::UserAgent;
-use Digest::SHA1 'sha1_hex';
+use Digest::SHA 'sha1_hex';
 use DT;
 
 sub download {

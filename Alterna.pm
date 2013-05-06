@@ -8,7 +8,7 @@ use utf8;
 
 use XML::Feed;
 use DT;
-use Digest::SHA1 'sha1_hex';
+use Digest::SHA 'sha1_hex';
 
 sub download {
     my $feed = XML::Feed->parse( URI->new( 'http://www.alterna.cz/action/rss/' ) )

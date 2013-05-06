@@ -9,7 +9,7 @@ use Net::Google::Calendar;
 use Data::Dumper;
 use DateTime;
 use JSON::XS;
-use Digest::SHA1 'sha1_hex';
+use Digest::SHA 'sha1_hex';
 use Encode;
 
 *DateTime::TO_JSON = sub { return "" . shift };
