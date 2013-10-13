@@ -96,6 +96,11 @@ sub update_entries {
             warn "entry without id";
             next;
         }
+        if ( exists $entries->{ $id } ) {
+            $self->{cal}->delete_entry( $entry );
+            print "deleting duplicate of " . $entry->extended_property->{id} . "\n";
+            next;
+        }
         $entries->{ $id } = $entry;
     }
 
