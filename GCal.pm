@@ -14,7 +14,7 @@ use Encode;
 
 *DateTime::TO_JSON = sub { return "" . shift };
 
-our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 );
+our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 )->canonical( 1 );
 
 # Constructor, to be called as:
 # my $gcal = GCal->new( user => '...', pass => '... );
