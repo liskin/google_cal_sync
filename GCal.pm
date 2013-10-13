@@ -88,7 +88,7 @@ sub update_entries {
     my $self = shift;
     my $entries;
 
-    for my $entry ( $self->{cal}->get_events( 'max-results' => 1000,
+    for my $entry ( $self->{cal}->get_events( 'max-results' => 100000,
             fields => 'entry(gd:extendedProperty,link)' ) )
     {
         my $id = $entry->extended_property->{id};
