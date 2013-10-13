@@ -35,7 +35,7 @@ sub ical2x {
 }
 
 sub ical_unescape {
-    my $_ = shift;
+    local $_ = shift;
     s/\\([;,])/$1/g;
     s/\\n/\n/ig;
     s/\\\\/\\/g;
