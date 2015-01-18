@@ -29,7 +29,7 @@ sub download {
 		      , when     => [ $start, $end ]
 		      , id       => $entry->link
 		      , public   => 1
-		      , icon     => 'http://www.alterna.cz/favicon.ico'
+		      , icon     => 'https://raw.githubusercontent.com/liskin/google_cal_sync/master/alterna.ico'
 		      };
     }
 
