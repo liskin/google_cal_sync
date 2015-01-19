@@ -31,12 +31,6 @@ $do->{foursquare} = sub {
             ICal::load_ical( $ua->get( $conf->{foursq_url} )->decoded_content ) );
 } if defined $conf->{foursq_url};
 
-$do->{kinoart} = sub {
-    use KinoArt;
-    $gcal->set_calendar( 'Kino Art' );
-    $gcal->update_entries( KinoArt::download );
-};
-
 $do->{alterna} = sub {
     use Alterna;
     $gcal->set_calendar( 'Alterna' );
