@@ -23,7 +23,7 @@ sub download {
 	my $start = dt( $2, $3, $4, $5, $6 );
 	my $end   = $start + DateTime::Duration->new( hours => 2 );
 	push @events, { title    => $1 . " (Alterna)"
-		      , content  => ''
+		      , content  => $entry->link
 		      , location => 'Alterna, Kounicova 48, Brno'
 		      , url      => $entry->link
 		      , when     => [ $start, $end ]

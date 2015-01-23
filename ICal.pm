@@ -22,16 +22,22 @@ sub load_ical {
 # Convert to the simple structure used in GCal.
 sub ical2x {
     my $ev = shift;
-    return {
+
+    my $x = {
         title    => ical_unescape( "$ev->{SUMMARY}"     ),
         content  => ical_unescape( "$ev->{DESCRIPTION}" ),
         location => ical_unescape( "$ev->{LOCATION}"    ),
         url      => ical_unescape( "$ev->{URL}"         ),
-        #partstat => "$ev->{PARTSTAT}",
         id       => "$ev->{UID}",
-        #lastmod  => $ev->{"LAST-MODIFIED"}->strftime( "%s" ),
         when     => [ $ev->{DTSTART}, $ev->{DTEND} ],
+        extra    => {}
     };
+
+    $x->{extra}->{'URL'} = $x->{url} if length $x->{url};
+    $x->{extra}->{'Organizer'} = ical_unescape( "$ev->{ORGANIZER}->{CN}" ) if defined $ev->{ORGANIZER}->{CN};
+    $x->{extra}->{'Participation status'} = ical_unescape( "$ev->{PARTSTAT}" ) if defined $ev->{PARTSTAT};
+
+    return $x;
 }
 
 sub ical_unescape {

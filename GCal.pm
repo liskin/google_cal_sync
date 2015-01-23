@@ -82,8 +82,16 @@ sub x2entry {
     my $last_hash = $entry->{extendedProperties}->{shared}->{last_hash} // 'kokot';
     my $changed = $hash ne $last_hash;
 
+    my @desc = ( $ev->{content} );
+    if ( %{$ev->{extra} // {}} ) {
+        unshift @desc, '';
+        for ( sort keys %{$ev->{extra}} ) {
+            unshift @desc, $_ . ": " . $ev->{extra}->{$_};
+        }
+    }
+
     $entry->{summary} = encode( 'UTF-8', $ev->{title} );
-    $entry->{description} = encode( 'UTF-8', $ev->{url} . "\n\n" . $ev->{content} );
+    $entry->{description} = encode( 'UTF-8', join( "\n", @desc ) );
     $entry->{location} = encode( 'UTF-8', $ev->{location} );
     $entry->{start}->{dateTime} = $ev->{when}->[0]->strftime( "%FT%T%z" );
     $entry->{end}->{dateTime} = $ev->{when}->[1]->strftime( "%FT%T%z" );
