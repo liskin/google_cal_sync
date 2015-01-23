@@ -91,6 +91,11 @@ sub x2entry {
     $entry->{extendedProperties}->{shared}->{last_hash} = $hash;
     $entry->{anyoneCanAddSelf} = $ev->{public} ? \1 : \0;
 
+    if ( length $ev->{url} ) {
+        $entry->{source}->{title} = $entry->{summary};
+        $entry->{source}->{url} = $ev->{url};
+    }
+
     if ( $ev->{icon} ) {
         $entry->{gadget}->{iconLink} = $ev->{icon};
         $entry->{gadget}->{display} = 'chip';
