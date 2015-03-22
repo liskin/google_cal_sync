@@ -6,6 +6,7 @@ use strict;
 use warnings;
 use feature 'say';
 
+use Clone 'clone';
 use Data::Dumper;
 use DateTime;
 use JSON::XS;
@@ -39,7 +40,7 @@ sub list_calendars {
     my $body = { maxResults => 100, fields => 'items(id,summary),nextPageToken' };
     my $auth = { auth_driver => $self->{auth_driver} };
     do {
-        my $list = $self->{service}->calendarList->list( body => $body )->execute( $auth );
+        my $list = $self->{service}->calendarList->list( body => clone( $body ) )->execute( $auth );
         $body->{pageToken} = $list->{nextPageToken};
         push @items, @{ $list->{items} };
     } while defined $body->{pageToken};
@@ -126,7 +127,7 @@ sub list_events {
         , calendarId => $cal };
     my $auth = { auth_driver => $self->{auth_driver} };
     do {
-        my $list = $self->{service}->events->list( body => $body )->execute( $auth );
+        my $list = $self->{service}->events->list( body => clone( $body ) )->execute( $auth );
         $body->{pageToken} = $list->{nextPageToken};
         push @items, @{ $list->{items} };
     } while defined $body->{pageToken};
