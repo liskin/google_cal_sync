@@ -10,6 +10,9 @@ use LWP::UserAgent;
 use ICal;
 use GCal;
 
+use Carp;
+$SIG{ __DIE__ } = sub { Carp::confess( @_ ) };
+
 my $conf = eval `cat private.conf`;
 
 my $ua = LWP::UserAgent->new;
