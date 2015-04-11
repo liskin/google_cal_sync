@@ -12,6 +12,7 @@ use Data::ICal;
 use DateTime::Format::ICal;
 use DateTime::Format::ISO8601;
 use Geo::Coder::Googlev3;
+use Time::HiRes 'sleep';
 use XML::Simple;
 
 my $f = shift or die;
@@ -85,5 +86,6 @@ sub get_loc {
     my $pos = $trackpoint->{Position};
     my $loc = $pos->{LatitudeDegrees} . ',' . $pos->{LongitudeDegrees};
     my @reply = $geocoder->geocode( location => $loc ) or die;
+    sleep 0.2; # API allows 5 reqs per second
     return $reply[0]->{formatted_address};
 }
