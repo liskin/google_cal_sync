@@ -29,9 +29,11 @@ $do->{facebook} = sub {
 
 $do->{foursquare} = sub {
     $gcal->set_calendar( 'Foursquare' );
-    $gcal->update_entries(
+    my @entries =
         map { $_->{icon} = 'https://foursquare.com/favicon.ico'; $_ }
-            ICal::load_ical( $ua->get( $conf->{foursq_url} )->decoded_content ) );
+            ICal::load_ical( $ua->get( $conf->{foursq_url} )->decoded_content );
+    die 'no foursquare entries, probably an error' unless @entries;
+    $gcal->update_entries( @entries );
 } if defined $conf->{foursq_url};
 
 $do->{alterna} = sub {
