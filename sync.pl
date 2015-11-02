@@ -36,12 +36,6 @@ $do->{foursquare} = sub {
     $gcal->update_entries( @entries );
 } if defined $conf->{foursq_url};
 
-$do->{alterna} = sub {
-    use Alterna;
-    $gcal->set_calendar( 'Alterna' );
-    $gcal->update_entries( Alterna::download );
-};
-
 $do->{strava} = sub {
     $gcal->set_calendar( 'Strava' );
     $gcal->update_entries(
