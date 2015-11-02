@@ -18,6 +18,7 @@ use Google::API::OAuth2::Client;
 *DateTime::TO_JSON = sub { return "" . shift };
 
 our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 )->canonical( 1 );
+our $dry_run = $ENV{'DRY_RUN'} ? 1 : 0;
 
 # Constructor, to be called as:
 # my $gcal = GCal->new();
@@ -170,7 +171,7 @@ sub update_entries {
             next;
         }
         if ( exists $entries->{ $id } ) {
-            $self->del_event( $self->{calendarId}, $entry );
+            $self->del_event( $self->{calendarId}, $entry ) unless $dry_run;
             print "deleting duplicate of " . $id . "\n";
             next;
         }
@@ -185,11 +186,11 @@ sub update_entries {
         my $id = $entry->{extendedProperties}->{shared}->{id};
 
         if ( $new ) {
-            $self->add_event( $self->{calendarId}, $entry );
+            $self->add_event( $self->{calendarId}, $entry ) unless $dry_run;
             print "added " . $id . "\n";
         } else {
             if ( $changed ) {
-                $self->patch_event( $self->{calendarId}, $entry );
+                $self->patch_event( $self->{calendarId}, $entry ) unless $dry_run;
                 print "updated " . $id . "\n";
             } else {
                 print "no change " . $id . "\n";
@@ -199,7 +200,7 @@ sub update_entries {
     }
 
     for my $entry ( values %$entries ) {
-        $self->del_event( $self->{calendarId}, $entry );
+        $self->del_event( $self->{calendarId}, $entry ) unless $dry_run;
         print "deleted " . $entry->{extendedProperties}->{shared}->{id} . "\n";
     }
 
