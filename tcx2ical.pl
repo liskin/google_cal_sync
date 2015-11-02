@@ -7,10 +7,9 @@ use 5.010;
 use strict;
 use warnings;
 
+use DT;
 use Data::ICal::Entry::Event;
 use Data::ICal;
-use DateTime::Format::ICal;
-use DateTime::Format::ISO8601;
 use Geo::Coder::Googlev3;
 use Time::HiRes 'sleep';
 use XML::Simple;
@@ -61,20 +60,6 @@ $calendar->add_entry( $entry );
 
 binmode STDOUT, ":utf8";
 print $calendar->as_string;
-
-sub dt_to_ical {
-    DateTime::Format::ICal->format_datetime( shift );
-}
-
-sub dt_to_hm {
-    my $dt = shift;
-    $dt = $dt->clone->set_time_zone( 'Europe/Prague' );
-    return sprintf( "%02d:%02d", $dt->hour, $dt->minute );
-}
-
-sub dt_from_iso {
-    DateTime::Format::ISO8601->parse_datetime( shift );
-}
 
 sub ppr_loc {
     my $loc = shift;
