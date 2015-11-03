@@ -263,16 +263,28 @@ sub del_filter_not_attended_events {
     my $self = shift;
     my $ev = shift;
 
+    return 0 if $ev->{extendedProperties}->{shared}->{attended};
+
     $ev = $self->get_event( $self->{calendarId}, $ev );
 
-    # if there's a non-negative response, keep it
-    return 0 if grep {
-        defined( $_->{responseStatus} ) and
-        $_->{responseStatus} ne 'declined'
-    } @{ $ev->{attendees} };
+    if (
+        # if there's a non-negative response, keep it
+        grep {
+            defined( $_->{responseStatus} ) and
+            $_->{responseStatus} ne 'declined'
+        } @{ $ev->{attendees} }
+    ) {
+        # cache attendance so that we don't need to get_event all old events
+        my $patch_ev;
+        $patch_ev->{id} = $ev->{id};
+        $patch_ev->{extendedProperties}->{shared}->{attended} = 1;
+        $self->patch_event( $self->{calendarId}, $patch_ev ) unless $dry_run;
 
-    # drop it otherwise
-    1;
+        0;
+    } else {
+        # drop it otherwise
+        1;
+    }
 }
 
 1;
