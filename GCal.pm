@@ -157,10 +157,21 @@ sub del_event {
     $self->{service}->events->delete( calendarId => $cal, eventId => $ev->{id} )->execute( $auth );
 }
 
+sub get_event {
+    my ($self, $cal, $ev) = @_;
+
+    my $auth = { auth_driver => $self->{auth_driver} };
+    $self->{service}->events->get( calendarId => $cal, eventId => $ev->{id} )->execute( $auth );
+}
+
 # Take a list of entries in the format expected by x2entry and put them online.
 # New events are added, old are updated if changed, disappeared are deleted.
 sub update_entries {
     my $self = shift;
+
+    my $params = shift;
+    my $del_filter = $params->{del_filter} // sub { 1 };
+
     my $entries;
 
     for my $entry ( @{ $self->list_events( $self->{calendarId} ) } )
@@ -200,8 +211,12 @@ sub update_entries {
     }
 
     for my $entry ( values %$entries ) {
-        $self->del_event( $self->{calendarId}, $entry ) unless $dry_run;
-        print "deleted " . $entry->{extendedProperties}->{shared}->{id} . "\n";
+        if ( $del_filter->( $entry ) ) {
+            $self->del_event( $self->{calendarId}, $entry ) unless $dry_run;
+            print "deleted " . $entry->{extendedProperties}->{shared}->{id} . "\n";
+        } else {
+            print "kept " . $entry->{extendedProperties}->{shared}->{id} . "\n";
+        }
     }
 
     return;
@@ -242,6 +257,22 @@ sub store_token {
         print $fh JSON->new->encode($access_token);
         close $fh;
     }
+}
+
+sub del_filter_not_attended_events {
+    my $self = shift;
+    my $ev = shift;
+
+    $ev = $self->get_event( $self->{calendarId}, $ev );
+
+    # if there's a non-negative response, keep it
+    return 0 if grep {
+        defined( $_->{responseStatus} ) and
+        $_->{responseStatus} ne 'declined'
+    } @{ $ev->{attendees} };
+
+    # drop it otherwise
+    1;
 }
 
 1;
