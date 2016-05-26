@@ -15,7 +15,7 @@ $SIG{ __DIE__ } = sub { Carp::confess( @_ ) };
 
 my $conf = eval `cat private.conf`;
 
-my $ua = LWP::UserAgent->new;
+my $ua = LWP::UserAgent->new(agent => 'curl/7.47.0');
 my $gcal = GCal->new( user => $conf->{user}, pass => $conf->{pass} );
 
 my $do = {};
