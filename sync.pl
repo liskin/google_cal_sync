@@ -5,6 +5,9 @@ use 5.010;
 use strict;
 use warnings;
 
+use FindBin;
+use lib "$FindBin::RealBin";
+
 use File::Slurp qw( read_file );
 use LWP::UserAgent;
 use ICal;

@@ -7,6 +7,9 @@ use 5.010;
 use strict;
 use warnings;
 
+use FindBin;
+use lib "$FindBin::RealBin";
+
 use DT;
 use Data::ICal::Entry::Event;
 use Data::ICal;
