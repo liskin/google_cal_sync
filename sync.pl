@@ -8,10 +8,10 @@ use warnings;
 use FindBin;
 use lib "$FindBin::RealBin";
 
-use File::Slurp qw( read_file );
-use LWP::UserAgent;
-use ICal;
 use GCal;
+use ICal;
+use LWP::UserAgent;
+use Path::Tiny;
 
 use Carp;
 $SIG{ __DIE__ } = sub { Carp::confess( @_ ) };
@@ -44,7 +44,7 @@ $do->{strava} = sub {
     $gcal->set_calendar( 'Strava' );
     $gcal->update_entries( {},
         map { $_->{icon} = 'https://d3nn82uaxijpm6.cloudfront.net/assets/favicon-3578624dbca1eda01ff67d8723f17d5e.ico'; $_ }
-        map { ICal::load_ical( scalar read_file( $_, binmode => ':utf8' ) ) }
+        map { ICal::load_ical( path( $_ )->slurp_utf8 ) }
         glob( $conf->{strava_dir} . '/*.ics' ) );
 } if defined $conf->{strava_dir};
 
