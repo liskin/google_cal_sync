@@ -24,11 +24,11 @@ sub ical2x {
     my $ev = shift;
 
     my $x = {
-        title    => ical_unescape( "$ev->{SUMMARY}"     ),
-        content  => ical_unescape( "$ev->{DESCRIPTION}" ),
-        location => ical_unescape( "$ev->{LOCATION}"    ),
-        url      => ical_unescape( "$ev->{URL}"         ),
-        id       => "$ev->{UID}",
+        title    => ical_unescape( $ev->{SUMMARY} ),
+        content  => ical_unescape( $ev->{DESCRIPTION} // "" ),
+        location => ical_unescape( $ev->{LOCATION} // "" ),
+        url      => ical_unescape( $ev->{URL} // "" ),
+        id       => $ev->{UID},
         when     => [ $ev->{DTSTART}, $ev->{DTEND} ],
         extra    => {}
     };
