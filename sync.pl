@@ -31,6 +31,13 @@ $do->{facebook} = sub {
         ICal::load_ical( $ua->get( $conf->{fb_url} )->decoded_content ) );
 } if defined $conf->{fb_url};
 
+$do->{meetup} = sub {
+    $gcal->set_calendar( 'Meetup events' );
+    $gcal->update_entries(
+        { del_filter => sub { $gcal->del_filter_not_attended_events( @_ ) } },
+        ICal::load_ical( $ua->get( $conf->{meetup_url} )->decoded_content ) );
+} if defined $conf->{meetup_url};
+
 $do->{foursquare} = sub {
     $gcal->set_calendar( 'Foursquare' );
     my @entries =
