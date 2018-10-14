@@ -11,13 +11,12 @@ use Data::Dumper;
 use DateTime;
 use JSON::XS;
 use Digest::SHA 'sha1_hex';
-use Encode;
 use Google::API::Client;
 use Google::API::OAuth2::Client;
 
 *DateTime::TO_JSON = sub { return "" . shift };
 
-our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 )->canonical( 1 );
+our $json = JSON::XS->new->allow_blessed( 1 )->convert_blessed( 1 )->canonical( 1 )->utf8( 1 );
 our $dry_run = $ENV{'DRY_RUN'} ? 1 : 0;
 
 # Constructor, to be called as:
@@ -80,7 +79,7 @@ sub set_calendar {
 sub x2entry {
     my ($ev, $entry) = @_;
 
-    my $hash = sha1_hex( encode( 'UTF-8', $json->encode( $ev ) ) );
+    my $hash = sha1_hex( $json->encode( $ev ) );
     my $last_hash = $entry->{extendedProperties}->{shared}->{last_hash} // 'kokot';
     my $changed = $hash ne $last_hash;
 
@@ -92,9 +91,9 @@ sub x2entry {
         }
     }
 
-    $entry->{summary} = encode( 'UTF-8', $ev->{title} );
-    $entry->{description} = encode( 'UTF-8', join( "\n", @desc ) );
-    $entry->{location} = encode( 'UTF-8', $ev->{location} );
+    $entry->{summary} = $ev->{title};
+    $entry->{description} = join( "\n", @desc );
+    $entry->{location} = $ev->{location};
     $entry->{start}->{dateTime} = $ev->{when}->[0]->strftime( "%FT%T%z" );
     $entry->{end}->{dateTime} = $ev->{when}->[1]->strftime( "%FT%T%z" );
     $entry->{extendedProperties}->{shared}->{id} = $ev->{id};
