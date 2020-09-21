@@ -42,10 +42,10 @@ $do->{foursquare} = sub {
     $gcal->set_calendar( 'Foursquare' );
     my @entries =
         map { $_->{icon} = 'https://foursquare.com/favicon.ico'; $_ }
-            ICal::load_ical( $ua->get( $conf->{foursq_url} )->decoded_content );
+            ICal::load_ical( path( '4sq_checkins.ics' )->slurp_utf8 );
     die 'no foursquare entries, probably an error' unless @entries;
     $gcal->update_entries( {}, @entries );
-} if defined $conf->{foursq_url};
+} if defined $conf->{foursquare_token};
 
 $do->{strava} = sub {
     $gcal->set_calendar( 'Strava' );

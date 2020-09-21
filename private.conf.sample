@@ -1,4 +1,4 @@
 { fb_url => '...' # ical link to Exported events from Facebook
-, foursq_url => '...' # ICS from https://foursquare.com/feeds/
 , strava_dir => '...' # directory with ICS files from tcx2ical.pl
+, foursquare_token => '...' # foursquare oauth2 token
 }
